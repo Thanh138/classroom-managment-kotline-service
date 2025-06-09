@@ -1,0 +1,33 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/classroom_management?currentSchema=auth
+    username: classroom_user
+    password: classroom123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      default_schema: auth
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    schemas: auth
+    locations: classpath:db/migration
+
+jwt:
+  secret: f0d6953ebc8066b5f951698e003e9107496a9490d23c7f5a869ae8e0283af818d7b583ea1bb7f0120ad84aca0e45867f0122b911d03710a20ef577a7b74a3d9853721359b8bb4c46439545224b0f8ce2cf16250d93053265ffbc57164d2eceeb9efdcf6ac35cc4ee0bd4b245e62a81d61fea7873ae77a3e98510bc73f831017572c0c3c9f69937622aa29c0b78ab8daa55078681faf83f6f722230088c3bacc48ffe6623bce3676770c096370d4932f61ea4e5c1529c46eb873f9a1a9ffd0c92e23f6eed4c057e394f559ef575fa72a5cbb2ad75b25052da58275c4ace785520279c7bea3b13122cf91f29427f3da38801759181ae1bae41148b44b4732489e2
+  expiration: 86400000  # 24 hours in milliseconds
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
