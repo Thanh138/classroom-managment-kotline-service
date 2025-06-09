@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="17" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="classroom-management.config-server" options="-parameters" />
+      <module name="classroom-management.config-server.main" options="-parameters" />
+      <module name="classroom-management.config-server.test" options="-parameters" />
+      <module name="classroom-management.service-discovery" options="-parameters" />
+      <module name="classroom-management.service-discovery.main" options="-parameters" />
+      <module name="classroom-management.service-discovery.test" options="-parameters" />
+    </option>
+  </component>
+</project>
