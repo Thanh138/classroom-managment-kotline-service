@@ -1,5 +1,7 @@
 server:
   port: 9000
+  servlet:
+    context-path: /auth-service
 
 spring:
   application:
@@ -7,23 +9,31 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/classroom_management?currentSchema=auth
     username: classroom_user
-    password: classroom123
+    password: 123456
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate
-      default_schema: auth
     show-sql: true
     properties:
       hibernate:
+        default_schema: auth
         format_sql: true
   flyway:
     schemas: auth
     locations: classpath:db/migration
 
+# JWT Configuration
 jwt:
-  secret: f0d6953ebc8066b5f951698e003e9107496a9490d23c7f5a869ae8e0283af818d7b583ea1bb7f0120ad84aca0e45867f0122b911d03710a20ef577a7b74a3d9853721359b8bb4c46439545224b0f8ce2cf16250d93053265ffbc57164d2eceeb9efdcf6ac35cc4ee0bd4b245e62a81d61fea7873ae77a3e98510bc73f831017572c0c3c9f69937622aa29c0b78ab8daa55078681faf83f6f722230088c3bacc48ffe6623bce3676770c096370d4932f61ea4e5c1529c46eb873f9a1a9ffd0c92e23f6eed4c057e394f559ef575fa72a5cbb2ad75b25052da58275c4ace785520279c7bea3b13122cf91f29427f3da38801759181ae1bae41148b44b4732489e2
+  secret: 26a75309ad82a8627d2556198326b79bc7b0fc57a4bbe725b5482eafa0f847e246fee80eda89e551dd6d78cf13bd06e2395f6324e87a9e3b8757ce52b6624455b856adb1a07c75a006e77842a8b13e2cad1042dd70e41f012ffd57d2ce94c573361bb1cddaec09059facc50568b4b22c53f6a2a161a991b3f4493dcb0aa80e2b4060329df67903f17e632f92cab18f12559e2c8e1661364e791262cbf8a0aad59b4e9ccd37be67f4a9a357cba2c7580270abecbefdbad0e1d7277c278932c7665e169c31cb42741e95a8652ffb4ba5e9997a8029a6ccaa45927e6e41c05e42a5bcd2c0a0d76f1d7b63f7a7b5db72da3ef29d603ee95dd6c5e6cc75368a70fa87
   expiration: 86400000  # 24 hours in milliseconds
+
+# SpringDoc Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: false
 
 eureka:
   client:

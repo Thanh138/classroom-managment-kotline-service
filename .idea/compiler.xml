@@ -5,6 +5,9 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="classroom-management.api-gateway" options="-parameters" />
+      <module name="classroom-management.api-gateway.main" options="-parameters" />
+      <module name="classroom-management.api-gateway.test" options="-parameters" />
       <module name="classroom-management.auth-service" options="-parameters" />
       <module name="classroom-management.auth-service.main" options="-parameters" />
       <module name="classroom-management.auth-service.test" options="-parameters" />

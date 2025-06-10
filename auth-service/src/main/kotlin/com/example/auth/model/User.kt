@@ -1,4 +1,4 @@
-package com.example.model
+package com.example.auth.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -37,5 +37,9 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    val roles: MutableSet<Role> = mutableSetOf(),
-)
+    var roles: MutableSet<Role> = mutableSetOf(),
+) {
+    fun addRole(role: Role) {
+        roles.add(role)
+    }
+}

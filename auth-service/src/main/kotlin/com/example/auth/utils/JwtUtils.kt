@@ -1,18 +1,20 @@
-package com.example.utils
+package com.example.auth.utils
 
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import org.apache.commons.lang.time.DateUtils
+import org.apache.commons.lang3.time.DateUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.stereotype.Component
 import java.util.Date
 import javax.crypto.SecretKey
 
+@Component
 class JwtUtils(
     @Value("\${jwt.secret}")
     private val jwtSecret: String,
-    @Value("\${jwt.expirationMs}")
+    @Value("\${jwt.expiration}")
     private val jwtExpirationMs: Long
 ) {
 
@@ -27,7 +29,7 @@ class JwtUtils(
             .compact()
     }
 
-    fun getUserInfoFromJwtToken(token: String): String? {
+    fun getUsernameFromJwtToken(token: String): String? {
         return try {
             Jwts.parserBuilder().setSigningKey(secretKey).build()
                 .parseClaimsJws(token).body.subject
