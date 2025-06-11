@@ -3,7 +3,7 @@ package com.example.auth.model
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "roles", schema = "auth")
+@Table(name = "roles")
 data class Role(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

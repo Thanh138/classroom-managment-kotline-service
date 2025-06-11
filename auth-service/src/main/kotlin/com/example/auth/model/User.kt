@@ -33,7 +33,6 @@ data class User(
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_roles",
-        schema = "auth",
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )

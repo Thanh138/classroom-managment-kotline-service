@@ -1,7 +1,7 @@
 package com.example.auth.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.example.auth.model.dto.ErrorResponse
+import com.example.auth.model.response.ErrorResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType

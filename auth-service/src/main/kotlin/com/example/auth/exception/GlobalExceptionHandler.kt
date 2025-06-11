@@ -1,6 +1,6 @@
 package com.example.auth.exception
 
-import com.example.auth.model.dto.ErrorResponse
+import com.example.auth.model.response.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice

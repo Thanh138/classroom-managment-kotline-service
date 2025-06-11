@@ -1,5 +1,6 @@
 package com.example.auth.utils
 
+import com.example.auth.service.imp.UserDetailsImpl
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.Date
 import javax.crypto.SecretKey
+import io.jsonwebtoken.SignatureAlgorithm
 
 @Component
 class JwtUtils(
@@ -19,20 +21,32 @@ class JwtUtils(
 ) {
 
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(jwtSecret.toByteArray())
-    fun generateJwtToken(authentication: UserDetails): String {
+    
+    fun generateJwtToken(userDetails: UserDetails): String {
         val now = Date()
         val expiryDate = DateUtils.addMilliseconds(now, jwtExpirationMs.toInt())
-        return Jwts.builder().setSubject(authentication.username)
+        val email = if (userDetails is UserDetailsImpl) {
+            userDetails.email
+        } else {
+            ""
+        }
+        return Jwts.builder()
+            .setSubject(userDetails.username)
+            .claim("email", email)
             .setIssuedAt(now)
             .setExpiration(expiryDate)
-            .signWith(secretKey)
+            .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact()
     }
 
     fun getUsernameFromJwtToken(token: String): String? {
         return try {
-            Jwts.parserBuilder().setSigningKey(secretKey).build()
-                .parseClaimsJws(token).body.subject
+            Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .body
+                .subject
         } catch (e: Exception) {
             println("Error parsing JWT token: ${e.message}")
             null
@@ -41,13 +55,27 @@ class JwtUtils(
 
     fun validateJwtToken(authToken: String): Boolean {
         return try {
-            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(authToken)
+            val claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(authToken)
+                .body
+
+            // Check token expiration
+            val now = Date()
+            if (claims.expiration.before(now)) {
+                println("JWT token is expired")
+                return false
+            }
             true
         } catch (e: JwtException) {
-            println("Invalid JWT token: ${e.message}")
+            println("JWT validation error: ${e.javaClass.simpleName} - ${e.message}")
             false
         } catch (e: IllegalArgumentException) {
             println("Invalid JWT token format: ${e.message}")
+            false
+        } catch (e: Exception) {
+            println("Unexpected error during JWT validation: ${e.message}")
             false
         }
     }

@@ -1,4 +1,4 @@
-package com.example.auth.model.dto
+package com.example.auth.model.response
 
 data class ErrorResponse(
     val status: Int,
