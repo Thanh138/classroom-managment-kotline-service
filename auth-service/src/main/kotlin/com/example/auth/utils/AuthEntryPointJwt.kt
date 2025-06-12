@@ -25,6 +25,7 @@ class AuthEntryPointJwt : AuthenticationEntryPoint {
         
         val errorResponse = ErrorResponse(
             status = HttpServletResponse.SC_UNAUTHORIZED,
+            error = authException.javaClass.simpleName,
             message = authException.message ?: "Unauthorized",
             path = request.requestURI
         )

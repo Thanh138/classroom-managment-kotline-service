@@ -92,7 +92,7 @@ class AuthService(
             isActive = true
         )
 
-        val userRole = roleRepository.findByName(Role.ROLE_STUDENT)
+        val userRole = roleRepository.findByName(Role.ROLE_GUEST)
             ?: throw IllegalStateException("User Role not found")
 
         user.addRole(userRole)

@@ -6,6 +6,7 @@ include(":service-discovery")
 include(":config-server")
 
 // Business services
+include(":auth-service")
 include(":student-service")
 include(":classroom-service")
 include(":assignment-service")
@@ -14,20 +15,25 @@ include(":grade-service")
 // Shared libraries
 include(":shared:common-dto")
 include(":shared:common-exceptions")
+
+// Create the shared directory structure
+file("shared/common-dto").mkdirs()
+
+// Additional includes
 include("api-gateway")
 include("api-gateway:service-discovery")
-include("auth-service")
 include("student-service")
 include("student-service:classroom-service")
-include("student-service")
 include("classroom-service")
 include("assignment-service")
 include("grade-service")
 include("shared")
-include("shared:common-dto")
-include("shared:common-exceptions")
 include("service-discovery")
-include("service-discovery")
-include("config-server")
-include("auth-service")
-include("api-gateway")
+
+include(
+    "api-gateway",
+    "auth-service",
+    "student-service",
+    "config-server",
+    "shared:common-dto"
+)

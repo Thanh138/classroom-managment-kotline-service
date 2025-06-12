@@ -1,0 +1,61 @@
+# application.yml
+server:
+  port: 9001
+
+spring:
+  application:
+    name: student-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/student_db?currentSchema=student_schema
+    username: postgres
+    password: 123456
+    hikari:
+      schema: student_schema
+    flyway:
+      enabled: true
+      locations: classpath:db/migration/student
+      baseline-on-migrate: true
+      schemas: student_schema
+      create-schemas: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: student_schema
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          enabled: true
+          issuer-uri: http://localhost:9000  # Auth service URL
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/.well-known/jwks.json
+
+jwt:
+  secret: 26a75309ad82a8627d2556198326b79bc7b0fc57a4bbe725b5482eafa0f847e246fee80eda89e551dd6d78cf13bd06e2395f6324e87a9e3b8757ce52b6624455b856adb1a07c75a006e77842a8b13e2cad1042dd70e41f012ffd57d2ce94c573361bb1cddaec09059facc50568b4b22c53f6a2a161a991b3f4493dcb0aa80e2b4060329df67903f17e632f92cab18f12559e2c8e1661364e791262cbf8a0aad59b4e9ccd37be67f4a9a357cba2c7580270abecbefdbad0e1d7277c278932c7665e169c31cb42741e95a8652ffb4ba5e9997a8029a6ccaa45927e6e41c05e42a5bcd2c0a0d76f1d7b63f7a7b5db72da3ef29d603ee95dd6c5e6cc75368a70fa87
+app:
+  class:
+    max-students: 50  # Configurable max students per class
+
+services:
+  auth-service:
+    url: http://localhost:9000 # Auth service URL
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework: INFO
+    com.example.student: DEBUG
+    com.example.student.client: DEBUG  # Enable debug logging for Feign client

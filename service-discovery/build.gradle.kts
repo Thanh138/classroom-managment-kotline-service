@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.1.0"
-    id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.9.0"
-    kotlin("plugin.spring") version "1.9.0"
+    id("org.springframework.boot") version "3.1.5"
+    id("io.spring.dependency-management") version "1.1.4"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.spring") version "1.9.20"
 }
 
 group = "com.yourname"
@@ -25,7 +25,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    // For Spring Boot 3.1.0, use Spring Cloud 2022.0.3
+    // Spring Cloud 2022.0.3 is compatible with Spring Boot 3.1.x
     implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.3"))
 
     // Testing
@@ -36,7 +36,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.3")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.3")
     }
 }
 

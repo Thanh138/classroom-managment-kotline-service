@@ -1,34 +1,32 @@
 package com.example.auth.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinTable
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import org.springframework.data.annotation.CreatedBy
+import org.springframework.data.annotation.LastModifiedBy
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.Instant
 
-@Table
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
+@EntityListeners(AuditingEntityListener::class)
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true, length = 50)
     val username: String,
 
-    @Column(nullable = false)
-    val password: String,
+    @Column(nullable = false, length = 100)
+    var password: String,
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true, length = 100)
     val email: String,
 
     @Column(nullable = false)
-    val isActive: Boolean = true,
+    var isActive: Boolean = true,
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -36,9 +34,34 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    var roles: MutableSet<Role> = mutableSetOf(),
+    val roles: MutableSet<Role> = mutableSetOf(),
+
+    @CreationTimestamp
+    @Column(updatable = false, nullable = false)
+    val createdAt: Instant = Instant.now(),
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    var updatedAt: Instant = Instant.now(),
+
+    @CreatedBy
+    @Column(updatable = false)
+    val createdBy: String? = null,
+
+    @LastModifiedBy
+    var lastModifiedBy: String? = null
 ) {
+    fun hasRole(roleName: String): Boolean {
+        return roles.any { it.name == roleName }
+    }
     fun addRole(role: Role) {
         roles.add(role)
     }
+    // For JPA
+    protected constructor() : this(
+        username = "",
+        password = "",
+        email = "",
+        isActive = false
+    )
 }

@@ -36,11 +36,11 @@ class SecurityConfig(
         authProvider.setPasswordEncoder(passwordEncoder())
         return authProvider
     }
+
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .csrf { it.disable() }
-
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers(
@@ -49,22 +49,44 @@ class SecurityConfig(
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
-                        "/webjars/swagger-ui/**",
-                        "/actuator/health"
+                        "/webjars/**",
+                        "/actuator/health",
+                        "/.well-known/**",
+                        "/oauth2/jwks",
+                        "/favicon.ico",
+                        "/error"
                     ).permitAll()
+                    // Public user endpoints
+                    .requestMatchers(
+                        "/api/v1/users/exists/**",
+                        "/api/v1/users/username/**",
+                        "/api/v1/users/search"
+                    ).permitAll() // or .authenticated() if you want to require auth
+                    // Protected admin endpoints
+                    .requestMatchers(
+                        "/api/v1/roles/**",
+                        "/api/v1/users/**" // This will cover all user management endpoints
+                    ).hasAnyAuthority("ROLE_TEACHER", "ROLE_STAFF", "ROLE_ADMIN")
                     .anyRequest().authenticated()
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
+            .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
+            .exceptionHandling { ex ->
+                ex.authenticationEntryPoint { _, response, authException ->
+                    response.sendError(401, "Unauthorized: ${authException.message}")
+                }
+                ex.accessDeniedHandler { _, response, accessDeniedException ->
+                    response.sendError(403, "Access Denied: ${accessDeniedException.message}")
+                }
+            }
             .build()
     }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
-
-
 }

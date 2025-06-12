@@ -39,8 +39,12 @@ class SecurityConfig {
                     // Protected auth endpoints - authentication required
                     .pathMatchers("/api/v1/auth/me").authenticated()
 
-                    // Default: allow all other requests
-                    .anyExchange().permitAll()
+                    // Student service endpoints - require authentication
+                    .pathMatchers("/api/v1/classes/**").authenticated()
+
+                    
+                    // Default: deny all other requests
+                    .anyExchange().denyAll()
             }
             .oauth2ResourceServer { oauth2 ->
                 oauth2.jwt { jwt ->
